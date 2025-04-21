@@ -1,0 +1,10 @@
+postgresql:
+  url: ${DATABASE_POSTGRESQL_URL}
+  username: ${DATABASE_POSTGRESQL_USERNAME}
+  password: ${DATABASE_POSTGRESQL_PASSWORD}
+
+spring:
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
