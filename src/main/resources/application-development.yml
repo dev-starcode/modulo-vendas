@@ -3,6 +3,19 @@ postgresql:
   username: postgres
   password: root
 
+logging:
+  level:
+    com.zaxxer.hikari: DEBUG
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 #spring:
 #  autoconfigure:

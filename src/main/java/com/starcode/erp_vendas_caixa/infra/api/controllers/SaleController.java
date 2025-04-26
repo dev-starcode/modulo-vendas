@@ -11,6 +11,7 @@ import com.starcode.erp_vendas_caixa.infra.sales.models.CreateSaleInputAPI;
 import com.starcode.erp_vendas_caixa.infra.sales.models.SaleApiOutput;
 import com.starcode.erp_vendas_caixa.infra.sales.models.SalePaginationApiOutput;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -29,6 +30,7 @@ public class SaleController implements SaleAPI {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> createSale(CreateSaleInputAPI data) {
         final var products = data.products()
                 .stream().map(product ->

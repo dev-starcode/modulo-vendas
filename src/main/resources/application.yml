@@ -6,10 +6,9 @@ server:
     enabled: true
     mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
     min-response-size: 1024
-  undertow:
+  tomcat:
     threads:
-      worker: 64
-      io: 4
+      max: 40
 
 spring:
   datasource:
@@ -19,25 +18,28 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       auto-commit: false
-      connection-timeout: 250 # É uma configuração em milliseconds. O ideal é manter baixo para que estoure timeout logo e não prenda as threads.
-      max-lifetime: 600000 # Tempo máximo que uma conexão pode ficar aberta (10 min) - security.
-      maximum-pool-size: 20 # Mantemos até no máx 20 conexões com o banco de dados. O ideal é manter baixo mesmo, pois é algo custoso para o banco gerenciar. https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing
+      connection-timeout: 500
+      max-lifetime: 600000
+      maximum-pool-size: 50
       minimum-idle: 10
       pool-name: master
     jpa:
       open-in-view: false
-      show-sql: true
+      show-sql: false
       hibernate:
         ddl-auto: none
     properties:
       "[hibernate.dialect]": org.hibernate.dialect.PostgreSQLDialect
       "[hibernate.generate_statistics]": false
       "[hibernate.connection.provider_disables_autocommit]": true
+  threads:
+    virtual:
+      enabled: true
 
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true

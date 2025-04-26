@@ -10,15 +10,8 @@ import org.springframework.core.env.AbstractEnvironment;
 public class ErpVendasCaixaApplication {
 
 	public static void main(String[] args) {
-		System.setProperty(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME, "production");
+		System.setProperty(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME, "development");
 		SpringApplication.run(ErpVendasCaixaApplication.class, args);
 	}
 
-//	@Bean
-//	@DependsOnDatabaseInitialization
-//	ApplicationRunner applicationRunner(@Autowired CreateCashierUseCase createCashierUseCase){
-//		return args -> {
-//
-//		};
-//	};
 }

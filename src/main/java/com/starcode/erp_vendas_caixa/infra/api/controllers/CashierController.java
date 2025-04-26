@@ -11,6 +11,7 @@ import com.starcode.erp_vendas_caixa.infra.cashier.models.CloseCashierApiInput;
 import com.starcode.erp_vendas_caixa.infra.cashier.models.CreateCashierApiInput;
 import com.starcode.erp_vendas_caixa.infra.cashier.models.OpenCashierApiInput;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -34,6 +35,7 @@ public class CashierController implements CashierAPI {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> createCashier(final CreateCashierApiInput input) {
         final var data = CreateCashierInputDTO.create(input.userOpeningId(), input.openingAmount());
         final var output = this.createCashierUseCase.execute(data);
@@ -61,6 +63,7 @@ public class CashierController implements CashierAPI {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> closeCashier(String cashier_id, CloseCashierApiInput data) {
         final var input = new CloseCashierInputDTO(cashier_id, data.userClosedId());
         final var output = this.closeCashierUseCase.execute(input);
@@ -69,11 +72,11 @@ public class CashierController implements CashierAPI {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> abrirCaixa(String cashier_id, OpenCashierApiInput data) {
         final var input = new OpenCashierInputDTO(cashier_id, data.userOpenedId());
         final var output = this.openCashierUseCase.execute(input);
         final var response = new CashierApiOutput("Caixa aberto com sucesso", output);
         return ResponseEntity.ok(response);
     }
-
 }
