@@ -1,6 +1,7 @@
 package com.starcode.erp_vendas_caixa.domain.entities.Cashier;
 import com.starcode.erp_vendas_caixa.domain.aggregate.AggregateRoot;
 import com.starcode.erp_vendas_caixa.domain.entities.Sale.Sale;
+import com.starcode.erp_vendas_caixa.domain.enums.StatusCashier;
 import com.starcode.erp_vendas_caixa.domain.exceptions.DomainException;
 import com.starcode.erp_vendas_caixa.domain.validation.Error;
 import com.starcode.erp_vendas_caixa.domain.validation.ValidationHandler;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class Cashier extends AggregateRoot<Identifier> {
     private Price openingAmount;
-    private Status status;
+    private StatusCashier status;
     private LocalDateTime openedAt;
     private LocalDateTime closedAt;
     private String userOpenedId;
@@ -21,7 +22,7 @@ public class Cashier extends AggregateRoot<Identifier> {
     private Integer totalSales;
     private Price closingAmount;
 
-    private Cashier(Identifier cashier_id, Price opening_amount, Status status, LocalDateTime opened_at, LocalDateTime closed_at, String user_opened_id, String user_closed_id, Integer total_sales, Price closing_amount) {
+    private Cashier(Identifier cashier_id, Price opening_amount, StatusCashier status, LocalDateTime opened_at, LocalDateTime closed_at, String user_opened_id, String user_closed_id, Integer total_sales, Price closing_amount) {
         super(cashier_id);
         this.openingAmount = opening_amount;
         this.status = status;
@@ -33,18 +34,13 @@ public class Cashier extends AggregateRoot<Identifier> {
         this.closingAmount = closing_amount;
     }
 
-    public enum Status {
-        opened,
-        closed;
-    };
-
     public static Cashier create(final String user_opened_id, final Double opening_amount) {
         final var cashier_id = Identifier.unique();
         final int total_sales = 0;
         final LocalDateTime opened_at = LocalDateTime.now();
         final var opening = Price.validate(opening_amount);
         final var closing_amount = Price.validate(0.0);
-        return new Cashier(cashier_id, opening, Status.opened, opened_at, null, user_opened_id, null, total_sales, closing_amount);
+        return new Cashier(cashier_id, opening, StatusCashier.OPENED, opened_at, null, user_opened_id, null, total_sales, closing_amount);
     }
 
     public static Cashier restore(final String cashier_id, final Double opening_amount, final String status, final LocalDateTime opened_at,
@@ -53,7 +49,7 @@ public class Cashier extends AggregateRoot<Identifier> {
         final var id = Identifier.restore(cashier_id);
         final var opening = Price.restore(opening_amount);
         final var closing = Price.restore(closing_amount);
-        return new Cashier(id, opening, Status.valueOf(status), opened_at, closed_at, user_opened_id, user_closed_id, total_sales, closing);
+        return new Cashier(id, opening, StatusCashier.fromString(status), opened_at, closed_at, user_opened_id, user_closed_id, total_sales, closing);
     }
 
     @Override
@@ -63,15 +59,15 @@ public class Cashier extends AggregateRoot<Identifier> {
     }
 
     public void open(final String user_opened_id) {
-        if(this.status == Status.opened) throw DomainException.with(Error.create("Conflict","O caixa já está aberto."));
-        this.status = Status.opened;
+        if(this.status == StatusCashier.OPENED) throw DomainException.with(Error.create("Conflict","O caixa já está aberto."));
+        this.status = StatusCashier.OPENED;
         this.userOpenedId =  user_opened_id;
         this.userClosedId = null;
         this.closingAmount.setValue(0D);
     }
     public void close(final String user_closed_id)  {
-        if(this.status == Status.closed) throw DomainException.with(Error.create("Conflict", "O caixa já está fechado."));
-        this.status = Status.closed;
+        if(this.status == StatusCashier.CLOSED) throw DomainException.with(Error.create("Conflict", "O caixa já está fechado."));
+        this.status = StatusCashier.CLOSED;
         this.closedAt = LocalDateTime.now();
         this.userClosedId = user_closed_id;
     }
@@ -89,12 +85,12 @@ public class Cashier extends AggregateRoot<Identifier> {
         this.closingAmount.setValue(total_amount);
     }
     public void addSale() {
-        if(this.status == Status.closed)
+        if(this.status == StatusCashier.CLOSED)
             throw DomainException.with(Error.create("Conflict","Não é possível adicionar vendas a um caixa fechado."));
         this.totalSales++;
     }
     public void addTotalSales(final int tota){
-        if(this.status == Status.closed)
+        if(this.status == StatusCashier.CLOSED)
             throw DomainException.with(Error.create("Conflict","Não é possível adicionar vendas a um caixa fechado."));
         this.totalSales = tota;
     }
@@ -103,7 +99,7 @@ public class Cashier extends AggregateRoot<Identifier> {
         return this.id;
     }
 
-    public Status getStatus() {return status;}
+    public StatusCashier getStatus() {return status;}
 
     public LocalDateTime getOpenedAt() {
         return openedAt;

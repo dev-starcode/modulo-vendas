@@ -2,6 +2,7 @@ package com.starcode.erp_vendas_caixa.domain.entities;
 
 import com.starcode.erp_vendas_caixa.domain.entities.Cashier.Cashier;
 import com.starcode.erp_vendas_caixa.domain.entities.Sale.Sale;
+import com.starcode.erp_vendas_caixa.domain.enums.StatusCashier;
 import com.starcode.erp_vendas_caixa.domain.exceptions.DomainException;
 import com.starcode.erp_vendas_caixa.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,7 @@ class CashierTest {
         assertNotNull(cashier);
         assertNotNull(cashier.getCashierId());
         assertEquals("user123", cashier.getUserOpenedId());
-        assertEquals(Cashier.Status.opened, cashier.getStatus());
+        assertEquals(StatusCashier.OPENED, cashier.getStatus());
         assertNotNull(cashier.getOpenedAt());
         assertNull(cashier.getClosedAt());
         assertEquals(0, cashier.getTotalSales());
@@ -73,7 +74,7 @@ class CashierTest {
     @DisplayName("Deve fechar um caixa corretamente")
     void deveFecharOCaixaComSucesso() {
         cashier.close("user456");
-        assertEquals(Cashier.Status.closed, cashier.getStatus());
+        assertEquals(StatusCashier.CLOSED, cashier.getStatus());
         assertEquals("user456", cashier.getUserClosedId());
         assertNotNull(cashier.getClosedAt());
     }

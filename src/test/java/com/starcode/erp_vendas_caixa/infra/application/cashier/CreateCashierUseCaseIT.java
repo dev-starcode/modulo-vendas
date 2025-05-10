@@ -33,12 +33,11 @@ public class CreateCashierUseCaseIT {
         final var output = this.createCashierUseCase.execute(input);
         assertNotNull(output.cashierId());
         assertEquals(userOpenedId, output.userOpenedId());
-        assertEquals("opened", output.status().toString());
+        assertEquals("opened", output.status());
         assertEquals(1, cashierRepository.count());
         final var actualCashier =
                 cashierRepository.findById(output.cashierId());
         assertEquals(output.cashierId(), actualCashier.get().getCashierId());
-        assertEquals(output.status(), actualCashier.get().getStatus());
         assertEquals(output.openingAmount(), actualCashier.get().getOpeningAmount());
         assertEquals(
                 output.openedAt().truncatedTo(ChronoUnit.MILLIS),

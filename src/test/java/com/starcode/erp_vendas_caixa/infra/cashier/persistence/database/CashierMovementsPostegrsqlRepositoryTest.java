@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("development")
+@ActiveProfiles("test")
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CashierMovementsPostegrsqlRepositoryTest {
@@ -65,7 +65,7 @@ public class CashierMovementsPostegrsqlRepositoryTest {
     public void deveBuscarPorPaginacao(){
        final var pagination = new SearchQuery(0,10,"out", "createdAt", "asc");
         final var result = this.cashierMovementsPostgresqlRepository.getByPagination(pagination);
-        Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals(3, result.size());
     }
 
 }

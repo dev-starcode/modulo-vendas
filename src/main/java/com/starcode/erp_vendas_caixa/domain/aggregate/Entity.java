@@ -15,7 +15,6 @@ public abstract class Entity<EntityId extends Identifier> {
         return id;
     }
 
-
     public abstract void validate(ValidationHandler validationHandler);
 
     @Override

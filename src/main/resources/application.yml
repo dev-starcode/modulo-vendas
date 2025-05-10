@@ -18,11 +18,12 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       auto-commit: false
-      connection-timeout: 500
+      maximum-pool-size: 150
+      minimum-idle: 20
+      connection-timeout: 3000
       max-lifetime: 600000
-      maximum-pool-size: 50
-      minimum-idle: 10
-      pool-name: master
+      idle-timeout: 30000
+
     jpa:
       open-in-view: false
       show-sql: false
@@ -37,8 +38,6 @@ spring:
       enabled: true
 
   jpa:
-    hibernate:
-      ddl-auto: none
     show-sql: false
     properties:
       hibernate:

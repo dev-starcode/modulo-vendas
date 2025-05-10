@@ -1,6 +1,7 @@
 package com.starcode.erp_vendas_caixa.domain.entities;
 
 import com.starcode.erp_vendas_caixa.domain.entities.CashierMovements.CashierMovements;
+import com.starcode.erp_vendas_caixa.domain.enums.TypeCashierMovements;
 import com.starcode.erp_vendas_caixa.domain.exceptions.DomainException;
 import com.starcode.erp_vendas_caixa.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +22,7 @@ class CashierMovimentsTest {
         assertNotNull(movement);
         assertEquals("cashier123", movement.getCashierId());
         assertEquals("user123", movement.getUserId());
-        assertEquals(CashierMovements.Type.in, movement.getType());
+        assertEquals(TypeCashierMovements.IN, movement.getType());
         assertEquals(100.0, movement.getAmount().getValue());
         assertEquals("Depósito inicial", movement.getReason());
     }
@@ -34,7 +35,7 @@ class CashierMovimentsTest {
         );
 
         assertNotNull(movement);
-        assertEquals(CashierMovements.Type.out, movement.getType());
+        assertEquals(TypeCashierMovements.OUT, movement.getType());
         assertEquals(50.0, movement.getAmount().getValue());
         assertEquals("Pagamento", movement.getReason());
     }
@@ -70,7 +71,7 @@ class CashierMovimentsTest {
 
         assertNotNull(moviment);
         assertEquals("mov123", moviment.getCashierMovementId().getValue());
-        assertEquals(CashierMovements.Type.in, moviment.getType());
+        assertEquals(TypeCashierMovements.IN, moviment.getType());
         assertEquals(200.0, moviment.getAmount().getValue());
         assertEquals("Restaurado", moviment.getReason());
     }
@@ -83,7 +84,7 @@ class CashierMovimentsTest {
         );
         movement.validate(new ThrowsValidationHandler());
         movement.in();
-        assertEquals(CashierMovements.Type.in, movement.getType());
+        assertEquals(TypeCashierMovements.IN, movement.getType());
     }
 
     @Test
@@ -106,7 +107,7 @@ class CashierMovimentsTest {
         );
         movement.validate(new ThrowsValidationHandler());
         movement.out();
-        assertEquals(CashierMovements.Type.out, movement.getType());
+        assertEquals(TypeCashierMovements.OUT, movement.getType());
     }
 
     @Test

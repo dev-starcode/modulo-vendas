@@ -1,6 +1,7 @@
 package com.starcode.erp_vendas_caixa.domain.entities;
 
 import com.starcode.erp_vendas_caixa.domain.entities.Sale.Sale;
+import com.starcode.erp_vendas_caixa.domain.enums.StatusSale;
 import com.starcode.erp_vendas_caixa.domain.exceptions.DomainException;
 import com.starcode.erp_vendas_caixa.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +20,7 @@ class SalesTest {
         sale.calculateTotal();
         assertNotNull(sale);
         assertEquals(100.00, sale.getTotal());
-        assertEquals("pending", sale.getStatus().toString());
+        assertEquals(StatusSale.PENDING, sale.getStatus());
     }
     @Test
     @DisplayName("Deve calcular o total com desconto")
@@ -67,7 +68,7 @@ class SalesTest {
         sale.validate(new ThrowsValidationHandler());
         sale.paid();
         sale.calculateTotal();
-        assertEquals("paid", sale.getStatus().toString());
+        assertEquals(StatusSale.PAID, sale.getStatus());
         assertEquals(90.0, sale.getTotal());
     }
     @Test
@@ -76,7 +77,7 @@ class SalesTest {
         Sale sale = Sale.create("user123", "client123", "cashier123", 100.0, 10.0, "paid");
         sale.validate(new ThrowsValidationHandler());
         sale.cancel();
-        assertEquals("canceled", sale.getStatus().toString());
+        assertEquals(StatusSale.CANCELED, sale.getStatus());
     }
 
 }

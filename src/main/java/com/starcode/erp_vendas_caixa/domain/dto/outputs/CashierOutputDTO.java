@@ -22,7 +22,7 @@ public record CashierOutputDTO(
         return new CashierOutputDTO(
                 data.getCashierId().getValue(),
                 data.getOpeningAmount().getValue(),
-                data.getStatus().name(),
+                data.getStatus().getValue(),
                 data.getOpenedAt(),
                 data.getClosedAt(),
                 data.getUserOpenedId(),

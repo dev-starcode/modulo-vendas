@@ -3,9 +3,11 @@ package com.starcode.erp_vendas_caixa.infra.api.controllers;
 import com.starcode.erp_vendas_caixa.domain.exceptions.DomainException;
 import com.starcode.erp_vendas_caixa.domain.exceptions.NotFoundException;
 import jakarta.persistence.PersistenceException;
+import org.hibernate.HibernateException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -90,7 +92,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = PersistenceException.class)
     public ResponseEntity<?> handlePersistenceException(final PersistenceException ex) {
         final var response = GenericError.genericError("PersistenceException", "Erro ao acessar o banco de dados: " + ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
+    }
+
+    @ExceptionHandler(value = InvalidDataAccessResourceUsageException.class)
+    public ResponseEntity<?> handleInvalidDataAccessResourceUsageException(final InvalidDataAccessResourceUsageException ex){
+        final var response = GenericError.genericError("InvalidDataAccessResourceUsageException", "Erro ao acessar recurso do banco");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(value = HibernateException.class)
+    public ResponseEntity<?> handleHibernateException(final HibernateException ex){
+        final var response = GenericError.genericError("HibernateException", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
     }
 
     @ExceptionHandler(value = Exception.class)

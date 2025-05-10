@@ -1,7 +1,7 @@
 postgresql:
-  url: jdbc:postgresql://localhost:5432/starcode-database?currentSchema=tenant
-  username: postgres
-  password: root
+  url: jdbc:postgresql://localhost:5432/starcode_database
+  username: starcode
+  password: starcode
 
 logging:
   level:

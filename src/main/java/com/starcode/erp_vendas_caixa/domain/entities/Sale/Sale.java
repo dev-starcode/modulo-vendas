@@ -1,5 +1,6 @@
 package com.starcode.erp_vendas_caixa.domain.entities.Sale;
 import com.starcode.erp_vendas_caixa.domain.aggregate.AggregateRoot;
+import com.starcode.erp_vendas_caixa.domain.enums.StatusSale;
 import com.starcode.erp_vendas_caixa.domain.validation.ValidationHandler;
 import com.starcode.erp_vendas_caixa.domain.value_objects.Identifier;
 import com.starcode.erp_vendas_caixa.domain.value_objects.Price;
@@ -12,10 +13,10 @@ public class Sale extends AggregateRoot<Identifier> {
     private Price partialPrice;
     private Price discount;
     private Price total;
-    private Status status;
+    private StatusSale status;
     private LocalDateTime saleDate;
 
-    private Sale(Identifier sale_id, String user_id, String client_id, String cashier_id, Price partial_price, Price discount, Price total, Status status, LocalDateTime sale_date) {
+    private Sale(Identifier sale_id, String user_id, String client_id, String cashier_id, Price partial_price, Price discount, Price total, StatusSale status, LocalDateTime sale_date) {
         super(sale_id);
         this.userId = user_id;
         this.clientId = client_id;
@@ -27,22 +28,17 @@ public class Sale extends AggregateRoot<Identifier> {
         this.saleDate = sale_date;
     }
 
-    public enum Status {
-        paid,
-        pending,
-        canceled
-    }
 
     public static Sale create(final String user_id, final String client_id, final String cashier_id, final Double partial_price, final Double discount, final String status) {
         final var sale_id = Identifier.unique();
-        final var statusSale = Status.valueOf(status);
+        final var statusSale = StatusSale.fromString(status);
         final var sale_date = LocalDateTime.now();
         return new Sale(sale_id, user_id, client_id, cashier_id, Price.validate(partial_price), Price.validate(discount), Price.validate(0.0), statusSale, sale_date);
     }
 
     public static Sale restore(final String sale_id, final String user_id, final String client_id, final String cashier_id, final Double partial_price, final Double discount, final Double total, final String status, final LocalDateTime sale_date){
         final var id = Identifier.restore(sale_id);
-        return new Sale(id, user_id, client_id, cashier_id, Price.restore(partial_price), Price.restore(discount), Price.restore(total), Status.valueOf(status), sale_date);
+        return new Sale(id, user_id, client_id, cashier_id, Price.restore(partial_price), Price.restore(discount), Price.restore(total), StatusSale.fromString(status), sale_date);
     }
 
     @Override
@@ -59,13 +55,13 @@ public class Sale extends AggregateRoot<Identifier> {
         this.total.setValue(total);
     }
     public void paid(){
-        this.status = Status.paid;
+        this.status = StatusSale.PAID;
     }
     public void pending(){
-        this.status = Status.pending;
+        this.status = StatusSale.PENDING;
     }
     public void cancel(){
-        this.status = Status.canceled;
+        this.status = StatusSale.CANCELED;
     }
 
     public Identifier getSaleId() {
@@ -96,7 +92,7 @@ public class Sale extends AggregateRoot<Identifier> {
         return total.getValue();
     }
 
-    public Status getStatus() {return status;}
+    public StatusSale getStatus() {return status;}
 
     public LocalDateTime getSaleDate() {
         return saleDate;
